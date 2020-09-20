@@ -22,3 +22,5 @@ interface Endpoint {
     @GET("top-headlines?sources=techcrunch&apiKey=9113484a059648fd895ab9364dfdc8bc")
     suspend fun getArticleUrl(): Response<News>
 }
+//
+//http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=9113484a059648fd895ab9364dfdc8bc

@@ -1,7 +1,8 @@
 package com.example.newsapi.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,8 +20,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private lateinit var viewModel:MainViewModel
-//    @Inject
-//    lateinit var mainRepository: MainRepository
+
 
     @Inject
     lateinit var mAdapter: AdapterNewsList
@@ -36,6 +36,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun init() {
+        Log.d(TAG, "init")
 
 //        //Injection
 //        val baseApplication = application as BaseApplication
@@ -44,19 +45,35 @@ class MainActivity : DaggerAppCompatActivity() {
         //ViewModel
         viewModel = ViewModelProvider(this,mainViewModelFactory).get(MainViewModel::class.java)
 
-        //Recycler view
-        recyclerview_news.layoutManager = LinearLayoutManager(this)
-        recyclerview_news.adapter = mAdapter
+        setupRecyclerView()
 
         observe()
-
-        viewModel.getArticleFromApi()
+        getData()
 
     }
 
+    private fun setupRecyclerView() {
+        //Recycler view
+        recyclerview_news.layoutManager = LinearLayoutManager(this)
+        recyclerview_news.adapter = mAdapter
+        mAdapter.getStatusLiveData().observe(this, Observer {
+            if(it != null){
+                val frag = ArticleDetailFragment.newInstance(it)
+                supportFragmentManager.beginTransaction().replace(R.id.frag_container,frag).addToBackStack(null).commit()
+            }
+        })
+    }
+
+    fun getData() {
+        viewModel.getArticleFromApi()
+    }
+
     private fun observe() {
+        Log.d(TAG, "observe")
         viewModel.getObservableArticleList().observe(this,Observer<ArrayList<Article>>{
             if(it != null){
+                Log.d(TAG, "observe: $it")
+
                 Toast.makeText(this, it.size.toString(), Toast.LENGTH_SHORT).show()
                 mAdapter.setData(it)
             }else{

@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.MainActivity"
+    android:id="@+id/constraint_layout_main"
     android:background="#292929">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_news"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"/>
+    <FrameLayout
+        android:id="@+id/frag_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
